@@ -64,6 +64,7 @@ export default function Metrics() {
   const categoryNames = Array.from(spendingByCategory.keys());
 
   const categoryData = [];
+  const drilldownSeriesData = [];
 
   categoryNames.forEach(categoryName => {
     categoryData.push({
@@ -71,6 +72,16 @@ export default function Metrics() {
       drilldown: categoryName,
       y: spendingByCategory.get(categoryName)
     });
+
+    const expensesForCategory = data.expenses.filter(
+      expense => expense.category.name === categoryName
+    );
+
+    console.log("expensesForCategory - ", categoryName, expensesForCategory);
+    // drilldownSeriesData.push({
+    //   name: categoryName,
+    //   id: categoryName
+    // });
   });
 
   options.series = [
@@ -80,14 +91,18 @@ export default function Metrics() {
   ];
 
   options.drilldown = {
-    series: [
-      {
-        name: "General",
-        id: "General",
-        data: [["v1.0", 10], ["v2.0", 20]]
-      }
-    ]
+    series: drilldownSeriesData
   };
+
+  // options.drilldown = {
+  //   series: [
+  //     {
+  //       name: "General",
+  //       id: "General",
+  //       data: [["v1.0", 10], ["v2.0", 20]]
+  //     }
+  //   ]
+  // };
 
   console.log("Options: ", options);
 
