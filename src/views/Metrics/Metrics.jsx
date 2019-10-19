@@ -33,14 +33,30 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import { bugs, website, server } from "variables/general.js";
 
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+
+import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+
 import {
-  dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart
 } from "variables/charts.js";
 import { data } from "../../test";
 
-import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+const options = {
+  chart: {
+    type: "spline"
+  },
+  title: {
+    text: "My chart"
+  },
+  series: [
+    {
+      data: [1, 2, 1, 4, 3, 6]
+    }
+  ]
+};
 
 const useStyles = makeStyles(styles);
 
@@ -127,31 +143,7 @@ export default function Metrics() {
       </GridContainer>
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="success">
-              <ChartistGraph
-                className="ct-chart"
-                data={dailySalesChart.data}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Daily Sales</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{" "}
-                increase in today sales.
-              </p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
-              </div>
-            </CardFooter>
-          </Card>
+          <HighchartsReact highcharts={Highcharts} options={options} />
         </GridItem>
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>
