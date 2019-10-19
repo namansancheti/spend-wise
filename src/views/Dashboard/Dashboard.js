@@ -5,6 +5,8 @@ import ChartistGraph from "react-chartist";
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
+import Button from "@material-ui/core/Button";
+import DeleteIcon from "@material-ui/icons/Delete";
 import Store from "@material-ui/icons/Store";
 import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
@@ -46,7 +48,29 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   return (
     <div>
-      {transactions.length === 0 ? "no data" : "data"}
+      {transactions.length === 0 ? (
+        <>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            startIcon={<DeleteIcon />}
+          >
+            Import from Splitwise
+          </Button>
+          <p>OR</p>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            startIcon={<DeleteIcon />}
+          >
+            Enter manually
+          </Button>
+        </>
+      ) : (
+        "data"
+      )}
       <GridContainer>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
