@@ -34,6 +34,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import { bugs, website, server } from "variables/general.js";
 
 import Highcharts from "highcharts";
+import drilldown from "highcharts-drilldown";
 import HighchartsReact from "highcharts-react-official";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -44,77 +45,129 @@ import {
 } from "variables/charts.js";
 import { data } from "../../test";
 
+drilldown(Highcharts);
+
 const options = {
   chart: {
     type: "pie"
   },
   title: {
-    text: "Spending by Category"
-  }
-  // series: [
-  //   {
-  //     data: [
-  //       {
-  //         name: "Chrome",
-  //         y: 62.74,
-  //         drilldown: "Chrome"
-  //       },
-  //       {
-  //         name: "Firefox",
-  //         y: 10.57,
-  //         drilldown: "Firefox"
-  //       },
-  //       {
-  //         name: "Internet Explorer",
-  //         y: 7.23,
-  //         drilldown: "Internet Explorer"
-  //       },
-  //       {
-  //         name: "Safari",
-  //         y: 5.58,
-  //         drilldown: "Safari"
-  //       },
-  //       {
-  //         name: "Edge",
-  //         y: 4.02,
-  //         drilldown: "Edge"
-  //       },
-  //       {
-  //         name: "Opera",
-  //         y: 1.92,
-  //         drilldown: "Opera"
-  //       },
-  //       {
-  //         name: "Other",
-  //         y: 7.62,
-  //         drilldown: null
-  //       }
-  //     ]
-  //  }
-  // ]
-};
+    text: "Browser market shares. January, 2018"
+  },
+  subtitle: {
+    text:
+      'Click the slices to view versions. Source: <a href="http://statcounter.com" target="_blank">statcounter.com</a>'
+  },
+  plotOptions: {
+    series: {
+      dataLabels: {
+        enabled: true,
+        format: "{point.name}: {point.y:.1f}%"
+      }
+    }
+  },
+
+  tooltip: {
+    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+    pointFormat:
+      '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+  },
+
+//   series: [
+//     {
+//       name: "Browsers",
+//       colorByPoint: true,
+//       data: [
+//         {
+//           name: "Chrome",
+//           y: 62.74,
+//           drilldown: "Chrome"
+//         },
+//         {
+//           name: "Firefox",
+//           y: 10.57,
+//           drilldown: "Firefox"
+//         }
+//       ]
+//     }
+//   ],
+//   drilldown: {
+//     series: [
+//       {
+//         name: "Chromes",
+//         id: "Chrome",
+//         data: [["v65.0", 0.1], ["v64.0", 1.3]]
+//       },
+//       {
+//         name: "Firefox",
+//         id: "Firefox",
+//         data: [
+//           ["v58.0", 1.02],
+//           ["v57.0", 7.36],
+//           ["v56.0", 0.35],
+//           ["v55.0", 0.11],
+//           ["v54.0", 0.1],
+//           ["v52.0", 0.95],
+//           ["v51.0", 0.15],
+//           ["v50.0", 0.1],
+//           ["v48.0", 0.31],
+//           ["v47.0", 0.12]
+//         ]
+//       },
+//       {
+//         name: "Internet Explorer",
+//         id: "Internet Explorer",
+//         data: [["v11.0", 6.2], ["v10.0", 0.29], ["v9.0", 0.27], ["v8.0", 0.47]]
+//       },
+//       {
+//         name: "Safari",
+//         id: "Safari",
+//         data: [
+//           ["v11.0", 3.39],
+//           ["v10.1", 0.96],
+//           ["v10.0", 0.36],
+//           ["v9.1", 0.54],
+//           ["v9.0", 0.13],
+//           ["v5.1", 0.2]
+//         ]
+//       },
+//       {
+//         name: "Edge",
+//         id: "Edge",
+//         data: [["v16", 2.6], ["v15", 0.92], ["v14", 0.4], ["v13", 0.1]]
+//       },
+//       {
+//         name: "Opera",
+//         id: "Opera",
+//         data: [["v50.0", 0.96], ["v49.0", 0.82], ["v12.1", 0.14]]
+//       }
+//     ]
+//   }
+// };
 
 const useStyles = makeStyles(styles);
 
 export default function Metrics() {
   const classes = useStyles();
-  const spendingByCategory = getSpendingByCategory(data.expenses);
-  const categoryNames = Array.from(spendingByCategory.keys());
+  // const spendingByCategory = getSpendingByCategory(data.expenses);
+  // const categoryNames = Array.from(spendingByCategory.keys());
 
-  const categoryData = [];
+  // const categoryData = [];
 
-  categoryNames.forEach(categoryId => {
-    categoryData.push({
-      name: categoryId,
-      y: spendingByCategory.get(categoryId)
-    });
-  });
+  // categoryNames.forEach(categoryId => {
+  //   categoryData.push({
+  //     name: categoryId,
+  //     y: spendingByCategory.get(categoryId)
+  //   });
+  // });
 
-  options.series = [
-    {
-      data: categoryData
-    }
-  ];
+  // options.series = [
+  //   {
+  //     data: categoryData
+  //   }
+  // ];
+
+  // console.log(options)
 
   return (
     <div>
