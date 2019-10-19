@@ -38,6 +38,7 @@ import {
   emailsSubscriptionChart,
   completedTasksChart
 } from "variables/charts.js";
+import { data } from "../../test";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
@@ -45,6 +46,7 @@ const useStyles = makeStyles(styles);
 
 export default function Metrics() {
   const classes = useStyles();
+  console.log("Data", data.expenses[0]);
   return (
     <div>
       <GridContainer>

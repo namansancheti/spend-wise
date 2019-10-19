@@ -46,7 +46,7 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState(["TODO"]);
   return (
     <div>
       {transactions.length === 0 ? (
