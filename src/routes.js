@@ -18,6 +18,7 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import AddIcon from "@material-ui/icons/Add";
+import InfoIcon from "@material-ui/icons/Info";
 import SearchIcon from "@material-ui/icons/Search";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
@@ -44,6 +45,13 @@ const dashboardRoutes = [
     path: "/search",
     name: "Search",
     icon: SearchIcon,
+    component: TableList,
+    layout: "/admin"
+  },
+  {
+    path: "/about",
+    name: "About",
+    icon: InfoIcon,
     component: TableList,
     layout: "/admin"
   }
