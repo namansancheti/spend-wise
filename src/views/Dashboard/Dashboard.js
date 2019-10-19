@@ -46,11 +46,11 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
-  const [transactions, setTransactions] = useState(["asd"]);
+  const [transactions, setTransactions] = useState([]);
   return (
     <div>
       {transactions.length === 0 ? (
-        <>
+        <div className={classes.dashboardContainer}>
           <Button
             variant="contained"
             color="secondary"
@@ -68,7 +68,7 @@ export default function Dashboard() {
           >
             Enter manually
           </Button>
-        </>
+        </div>
       ) : (
         <Metrics />
       )}
