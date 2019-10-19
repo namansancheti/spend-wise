@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -43,8 +43,10 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
+  const [transactions, setTransactions] = useState([]);
   return (
     <div>
+      {transactions.length === 0 ? "no data" : "data"}
       <GridContainer>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
