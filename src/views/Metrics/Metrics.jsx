@@ -33,170 +33,109 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import { bugs, website, server } from "variables/general.js";
 
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+
+import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+
 import {
-  dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart
 } from "variables/charts.js";
+import { data } from "../../test";
 
-import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+const options = {
+  chart: {
+    type: "pie"
+  },
+  title: {
+    text: "Spending by Category"
+  }
+  // series: [
+  //   {
+  //     data: [
+  //       {
+  //         name: "Chrome",
+  //         y: 62.74,
+  //         drilldown: "Chrome"
+  //       },
+  //       {
+  //         name: "Firefox",
+  //         y: 10.57,
+  //         drilldown: "Firefox"
+  //       },
+  //       {
+  //         name: "Internet Explorer",
+  //         y: 7.23,
+  //         drilldown: "Internet Explorer"
+  //       },
+  //       {
+  //         name: "Safari",
+  //         y: 5.58,
+  //         drilldown: "Safari"
+  //       },
+  //       {
+  //         name: "Edge",
+  //         y: 4.02,
+  //         drilldown: "Edge"
+  //       },
+  //       {
+  //         name: "Opera",
+  //         y: 1.92,
+  //         drilldown: "Opera"
+  //       },
+  //       {
+  //         name: "Other",
+  //         y: 7.62,
+  //         drilldown: null
+  //       }
+  //     ]
+  //  }
+  // ]
+};
 
 const useStyles = makeStyles(styles);
 
 export default function Metrics() {
   const classes = useStyles();
+  const spendingByCategory = getSpendingByCategory(data.expenses);
+  const categoryNames = Array.from(spendingByCategory.keys());
+
+  const categoryData = [];
+
+  categoryNames.forEach(categoryId => {
+    categoryData.push({
+      name: categoryId,
+      y: spendingByCategory.get(categoryId)
+    });
+  });
+
+  options.series = [
+    {
+      data: categoryData
+    }
+  ];
+
   return (
     <div>
-      <GridContainer>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
-                <Icon>content_copy</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Used Space</p>
-              <h3 className={classes.cardTitle}>
-                49/50 <small>GB</small>
-              </h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Danger>
-                  <Warning />
-                </Danger>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  Get more space
-                </a>
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="success" stats icon>
-              <CardIcon color="success">
-                <Store />
-              </CardIcon>
-              <p className={classes.cardCategory}>Revenue</p>
-              <h3 className={classes.cardTitle}>$34,245</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <DateRange />
-                Last 24 Hours
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="danger" stats icon>
-              <CardIcon color="danger">
-                <Icon>info_outline</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Fixed Issues</p>
-              <h3 className={classes.cardTitle}>75</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <LocalOffer />
-                Tracked from Github
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
-                <Accessibility />
-              </CardIcon>
-              <p className={classes.cardCategory}>Followers</p>
-              <h3 className={classes.cardTitle}>+245</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Update />
-                Just Updated
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      </GridContainer>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="success">
-              <ChartistGraph
-                className="ct-chart"
-                data={dailySalesChart.data}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Daily Sales</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{" "}
-                increase in today sales.
-              </p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="warning">
-              <ChartistGraph
-                className="ct-chart"
-                data={emailsSubscriptionChart.data}
-                type="Bar"
-                options={emailsSubscriptionChart.options}
-                responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                listener={emailsSubscriptionChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Email Subscriptions</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="danger">
-              <ChartistGraph
-                className="ct-chart"
-                data={completedTasksChart.data}
-                type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Completed Tasks</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      </GridContainer>
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
+}
+
+function getSpendingByCategory(expenses) {
+  const spendingByCategoryMap = new Map();
+  expenses.forEach(expense => {
+    const cost = expense.cost;
+    const categoryName = expense.category.name;
+    if (!spendingByCategoryMap.get(categoryName)) {
+      spendingByCategoryMap.set(categoryName, +cost);
+    } else {
+      spendingByCategoryMap.set(
+        categoryName,
+        +spendingByCategoryMap.get(categoryName) + +cost
+      );
+    }
+  });
+  return spendingByCategoryMap;
 }
