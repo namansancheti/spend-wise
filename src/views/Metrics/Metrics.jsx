@@ -50,58 +50,92 @@ const options = {
   },
   title: {
     text: "Spending by Category"
-  },
-  series: [
-    {
-      data: [
-        {
-          name: "Chrome",
-          y: 62.74,
-          drilldown: "Chrome"
-        },
-        {
-          name: "Firefox",
-          y: 10.57,
-          drilldown: "Firefox"
-        },
-        {
-          name: "Internet Explorer",
-          y: 7.23,
-          drilldown: "Internet Explorer"
-        },
-        {
-          name: "Safari",
-          y: 5.58,
-          drilldown: "Safari"
-        },
-        {
-          name: "Edge",
-          y: 4.02,
-          drilldown: "Edge"
-        },
-        {
-          name: "Opera",
-          y: 1.92,
-          drilldown: "Opera"
-        },
-        {
-          name: "Other",
-          y: 7.62,
-          drilldown: null
-        }
-      ]
-    }
-  ]
+  }
+  // series: [
+  //   {
+  //     data: [
+  //       {
+  //         name: "Chrome",
+  //         y: 62.74,
+  //         drilldown: "Chrome"
+  //       },
+  //       {
+  //         name: "Firefox",
+  //         y: 10.57,
+  //         drilldown: "Firefox"
+  //       },
+  //       {
+  //         name: "Internet Explorer",
+  //         y: 7.23,
+  //         drilldown: "Internet Explorer"
+  //       },
+  //       {
+  //         name: "Safari",
+  //         y: 5.58,
+  //         drilldown: "Safari"
+  //       },
+  //       {
+  //         name: "Edge",
+  //         y: 4.02,
+  //         drilldown: "Edge"
+  //       },
+  //       {
+  //         name: "Opera",
+  //         y: 1.92,
+  //         drilldown: "Opera"
+  //       },
+  //       {
+  //         name: "Other",
+  //         y: 7.62,
+  //         drilldown: null
+  //       }
+  //     ]
+  //  }
+  // ]
 };
 
 const useStyles = makeStyles(styles);
 
 export default function Metrics() {
   const classes = useStyles();
-  console.log("Data", data.expenses[0]);
+  const spendingByCategory = getSpendingByCategory(data.expenses);
+  const categoryNames = Array.from(spendingByCategory.keys());
+
+  const categoryData = [];
+
+  categoryNames.forEach(categoryId => {
+    categoryData.push({
+      name: categoryId,
+      y: spendingByCategory.get(categoryId)
+    });
+  });
+
+  options.series = [
+    {
+      data: categoryData
+    }
+  ];
+
   return (
     <div>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
+}
+
+function getSpendingByCategory(expenses) {
+  const spendingByCategoryMap = new Map();
+  expenses.forEach(expense => {
+    const cost = expense.cost;
+    const categoryName = expense.category.name;
+    if (!spendingByCategoryMap.get(categoryName)) {
+      spendingByCategoryMap.set(categoryName, +cost);
+    } else {
+      spendingByCategoryMap.set(
+        categoryName,
+        +spendingByCategoryMap.get(categoryName) + +cost
+      );
+    }
+  });
+  return spendingByCategoryMap;
 }
