@@ -78,10 +78,29 @@ export default function Metrics() {
     );
 
     console.log("expensesForCategory - ", categoryName, expensesForCategory);
-    // drilldownSeriesData.push({
-    //   name: categoryName,
-    //   id: categoryName
-    // });
+    const expensesForCategoryByMonth = {};
+
+    expensesForCategory.forEach(expense => {
+      const month = new Date(expense.date).getMonth();
+      if (!expensesForCategoryByMonth[month]) {
+        expensesForCategoryByMonth[month] = +expense.cost;
+      } else {
+        expensesForCategoryByMonth[month] += +expense.cost;
+      }
+    });
+
+    console.log("expensesForCategoryByMonth - ", expensesForCategoryByMonth);
+
+    const drilldownData = [];
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach(num => {
+      drilldownData.push([num, expensesForCategoryByMonth[num] || 0]);
+    });
+
+    drilldownSeriesData.push({
+      name: categoryName,
+      id: categoryName,
+      data: drilldownData
+    });
   });
 
   options.series = [
@@ -93,6 +112,8 @@ export default function Metrics() {
   options.drilldown = {
     series: drilldownSeriesData
   };
+
+  console.log(options);
 
   // options.drilldown = {
   //   series: [
