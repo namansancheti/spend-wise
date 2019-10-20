@@ -56,6 +56,10 @@ export default function Dashboard() {
     // setIFrameDisplay("initial");
   };
 
+  const handleManuallyEnterClick = () => {
+    window.location.href = "/admin/add";
+  };
+
   if (transactions.length === 0) {
     fetch("https://secure.splitwise.com/api/v3.0/get_expenses?limit=0")
       .then(resp => resp.json())
@@ -64,6 +68,10 @@ export default function Dashboard() {
           console.log("Error:", data.error);
         } else {
           console.log("Expenses:", data);
+          window.localStorage.setItem(
+            "transactions",
+            JSON.stringify(data.expenses)
+          );
           setTransactions(data);
         }
       })
@@ -88,6 +96,7 @@ export default function Dashboard() {
             variant="contained"
             color="secondary"
             className={classes.button}
+            onClick={handleManuallyEnterClick}
             startIcon={<DeleteIcon />}
           >
             Enter manually
