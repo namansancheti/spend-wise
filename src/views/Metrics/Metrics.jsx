@@ -34,6 +34,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import { bugs, website, server } from "variables/general.js";
 
 import Highcharts from "highcharts";
+import drilldown from "highcharts-drilldown";
 import HighchartsReact from "highcharts-react-official";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -44,69 +45,96 @@ import {
 } from "variables/charts.js";
 import { data } from "../../test";
 
+drilldown(Highcharts);
+
 const options = {
   chart: {
     type: "pie"
   },
   title: {
     text: "Spending by Category"
+  },
+  plotOptions: {
+    series: {
+      dataLabels: {
+        enabled: true,
+        format: "{point.name}: {point.y:.2f}%"
+      }
+    }
+  },
+  tooltip: {
+    pointFormat:
+      '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
   }
-  // series: [
-  //   {
-  //     data: [
-  //       {
-  //         name: "Chrome",
-  //         y: 62.74,
-  //         drilldown: "Chrome"
-  //       },
-  //       {
-  //         name: "Firefox",
-  //         y: 10.57,
-  //         drilldown: "Firefox"
-  //       },
-  //       {
-  //         name: "Internet Explorer",
-  //         y: 7.23,
-  //         drilldown: "Internet Explorer"
-  //       },
-  //       {
-  //         name: "Safari",
-  //         y: 5.58,
-  //         drilldown: "Safari"
-  //       },
-  //       {
-  //         name: "Edge",
-  //         y: 4.02,
-  //         drilldown: "Edge"
-  //       },
-  //       {
-  //         name: "Opera",
-  //         y: 1.92,
-  //         drilldown: "Opera"
-  //       },
-  //       {
-  //         name: "Other",
-  //         y: 7.62,
-  //         drilldown: null
-  //       }
-  //     ]
-  //  }
-  // ]
 };
 
 const useStyles = makeStyles(styles);
 
 export default function Metrics() {
   const classes = useStyles();
-  const spendingByCategory = getSpendingByCategory(data.expenses);
-  const categoryNames = Array.from(spendingByCategory.keys());
+  const { totalCost, spendingByCategoryMap } = getSpendingByCategory(
+    data.expenses
+  );
+  const categoryNames = Array.from(spendingByCategoryMap.keys());
 
   const categoryData = [];
+  const drilldownSeriesData = [];
 
-  categoryNames.forEach(categoryId => {
+  categoryNames.forEach(categoryName => {
     categoryData.push({
-      name: categoryId,
-      y: spendingByCategory.get(categoryId)
+      name: categoryName,
+      drilldown: categoryName,
+      y: (spendingByCategoryMap.get(categoryName) / totalCost) * 100
+    });
+
+    const expensesForCategory = data.expenses.filter(
+      expense => expense.category.name === categoryName
+    );
+
+    console.log("expensesForCategory - ", categoryName, expensesForCategory);
+    const expensesForCategoryByMonth = {};
+
+    let totalExpensesForCategory = 0;
+    expensesForCategory.forEach(expense => {
+      const month = new Date(expense.date).getMonth();
+      totalExpensesForCategory += +expense.cost;
+      if (!expensesForCategoryByMonth[month]) {
+        expensesForCategoryByMonth[month] = +expense.cost;
+      } else {
+        expensesForCategoryByMonth[month] += +expense.cost;
+      }
+    });
+
+    console.log("expensesForCategoryByMonth - ", expensesForCategoryByMonth);
+
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sept",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+
+    const drilldownData = [];
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach(num => {
+      drilldownData.push([
+        months[num],
+        ((expensesForCategoryByMonth[num] || 0) / totalExpensesForCategory) *
+          100
+      ]);
+    });
+
+    drilldownSeriesData.push({
+      name: categoryName,
+      id: categoryName,
+      data: drilldownData
     });
   });
 
@@ -115,6 +143,24 @@ export default function Metrics() {
       data: categoryData
     }
   ];
+
+  options.drilldown = {
+    series: drilldownSeriesData
+  };
+
+  console.log(options);
+
+  // options.drilldown = {
+  //   series: [
+  //     {
+  //       name: "General",
+  //       id: "General",
+  //       data: [["v1.0", 10], ["v2.0", 20]]
+  //     }
+  //   ]
+  // };
+
+  console.log("Options: ", options);
 
   return (
     <div>
@@ -125,8 +171,10 @@ export default function Metrics() {
 
 function getSpendingByCategory(expenses) {
   const spendingByCategoryMap = new Map();
+  let totalCost = 0;
   expenses.forEach(expense => {
     const cost = expense.cost;
+    totalCost += +cost;
     const categoryName = expense.category.name;
     if (!spendingByCategoryMap.get(categoryName)) {
       spendingByCategoryMap.set(categoryName, +cost);
@@ -137,5 +185,8 @@ function getSpendingByCategory(expenses) {
       );
     }
   });
-  return spendingByCategoryMap;
+  return {
+    spendingByCategoryMap,
+    totalCost
+  };
 }
