@@ -43,12 +43,10 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
   const classes = useStyles();
-  // const transaction = ["a", "desc", "2019-10-15T15:10:06Z", 23];
   const transactions = [];
   const fetchedTransactions = JSON.parse(
     window.localStorage.getItem("transactions")
   );
-  // console.log("window", window);
   fetchedTransactions.map(transaction => {
     transactions.push([
       transaction.category.name,
@@ -56,13 +54,7 @@ export default function TableList() {
       new Date(transaction.date).toDateString(),
       transaction.cost
     ]);
-    // transaction.category.name,
-    // transaction.description,
-    // new Date(transaction.date),
-    // transaction.cost
-    // );
   });
-  console.log("fetchedTransactions", transactions);
 
   return (
     <GridContainer>
