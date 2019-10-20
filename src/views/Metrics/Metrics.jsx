@@ -94,8 +94,10 @@ export default function Metrics() {
     console.log("expensesForCategory - ", categoryName, expensesForCategory);
     const expensesForCategoryByMonth = {};
 
+    let totalExpensesForCategory = 0;
     expensesForCategory.forEach(expense => {
       const month = new Date(expense.date).getMonth();
+      totalExpensesForCategory += +expense.cost;
       if (!expensesForCategoryByMonth[month]) {
         expensesForCategoryByMonth[month] = +expense.cost;
       } else {
@@ -105,9 +107,28 @@ export default function Metrics() {
 
     console.log("expensesForCategoryByMonth - ", expensesForCategoryByMonth);
 
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sept",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+
     const drilldownData = [];
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].forEach(num => {
-      drilldownData.push([num, expensesForCategoryByMonth[num] || 0]);
+      drilldownData.push([
+        months[num],
+        ((expensesForCategoryByMonth[num] || 0) / totalExpensesForCategory) *
+          100
+      ]);
     });
 
     drilldownSeriesData.push({
