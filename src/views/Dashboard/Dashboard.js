@@ -46,7 +46,30 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
-  const [transactions, setTransactions] = useState(["TODO"]);
+  const [transactions, setTransactions] = useState([]);
+  const [iframeDisplay, setIFrameDisplay] = useState("none");
+  const src =
+    "https://www.splitwise.com/oauth/authorize?redirect_uri=https%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&client_id=Gx5UtCbfDfmmMAkWA9V4DKdXt1OMa8ZozjMTRTVW";
+
+  const handleImportFromSplitwiseClick = () => {
+    window.location.href = src;
+    // setIFrameDisplay("initial");
+  };
+
+  if (transactions.length === 0) {
+    fetch("https://secure.splitwise.com/api/v3.0/get_expenses?limit=0")
+      .then(resp => resp.json())
+      .then(data => {
+        if (data.error) {
+          console.log("Error:", data.error);
+        } else {
+          console.log("Expenses:", data);
+          setTransactions(data);
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
   return (
     <div>
       {transactions.length === 0 ? (
@@ -54,6 +77,7 @@ export default function Dashboard() {
           <Button
             variant="contained"
             color="secondary"
+            onClick={handleImportFromSplitwiseClick}
             className={classes.button}
             startIcon={<DeleteIcon />}
           >
@@ -68,9 +92,15 @@ export default function Dashboard() {
           >
             Enter manually
           </Button>
+          <iframe
+            style={{ display: iframeDisplay }}
+            src={src}
+            width="1000"
+            height="500"
+          ></iframe>
         </div>
       ) : (
-        <Metrics />
+        <Metrics inpData={transactions} />
       )}
     </div>
   );
