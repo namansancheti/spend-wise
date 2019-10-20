@@ -53,6 +53,18 @@ const options = {
   },
   title: {
     text: "Spending by Category"
+  },
+  plotOptions: {
+    series: {
+      dataLabels: {
+        enabled: true,
+        format: "{point.name}: {point.y:.2f}%"
+      }
+    }
+  },
+  tooltip: {
+    pointFormat:
+      '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
   }
 };
 
@@ -60,8 +72,10 @@ const useStyles = makeStyles(styles);
 
 export default function Metrics() {
   const classes = useStyles();
-  const spendingByCategory = getSpendingByCategory(data.expenses);
-  const categoryNames = Array.from(spendingByCategory.keys());
+  const { totalCost, spendingByCategoryMap } = getSpendingByCategory(
+    data.expenses
+  );
+  const categoryNames = Array.from(spendingByCategoryMap.keys());
 
   const categoryData = [];
   const drilldownSeriesData = [];
@@ -70,7 +84,7 @@ export default function Metrics() {
     categoryData.push({
       name: categoryName,
       drilldown: categoryName,
-      y: spendingByCategory.get(categoryName)
+      y: (spendingByCategoryMap.get(categoryName) / totalCost) * 100
     });
 
     const expensesForCategory = data.expenses.filter(
@@ -136,8 +150,10 @@ export default function Metrics() {
 
 function getSpendingByCategory(expenses) {
   const spendingByCategoryMap = new Map();
+  let totalCost = 0;
   expenses.forEach(expense => {
     const cost = expense.cost;
+    totalCost += +cost;
     const categoryName = expense.category.name;
     if (!spendingByCategoryMap.get(categoryName)) {
       spendingByCategoryMap.set(categoryName, +cost);
@@ -148,5 +164,8 @@ function getSpendingByCategory(expenses) {
       );
     }
   });
-  return spendingByCategoryMap;
+  return {
+    spendingByCategoryMap,
+    totalCost
+  };
 }
