@@ -84,7 +84,7 @@ export default function Dashboard() {
         <div className={classes.dashboardContainer}>
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={handleImportFromSplitwiseClick}
             className={classes.button}
             startIcon={<DeleteIcon />}
