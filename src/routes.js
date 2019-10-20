@@ -27,7 +27,7 @@ import TableList from "views/TableList/TableList.js";
 
 const dashboardRoutes = [
   {
-    path: "/home",
+    path: "/dashboard",
     name: "Home",
     rtlName: "لوحة القيادة",
     icon: Dashboard,

@@ -8,6 +8,7 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import MaterialTable from "material-table";
 
 const styles = {
   cardCategoryWhite: {
@@ -50,17 +51,12 @@ export default function TableList() {
   );
   // console.log("window", window);
   fetchedTransactions.map(transaction => {
-    transactions.push([
-      transaction.category.name,
-      transaction.description,
-      new Date(transaction.date).toDateString(),
-      transaction.cost
-    ]);
-    // transaction.category.name,
-    // transaction.description,
-    // new Date(transaction.date),
-    // transaction.cost
-    // );
+    transactions.push({
+      categoryName: transaction.category.name,
+      description: transaction.description,
+      date: new Date(transaction.date).toDateString(),
+      cost: transaction.cost
+    });
   });
   console.log("fetchedTransactions", transactions);
 
@@ -72,11 +68,20 @@ export default function TableList() {
             <h4 className={classes.cardTitleWhite}>Expenses</h4>
           </CardHeader>
           <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["Category", "Description", "Date", "Cost"]}
-              tableData={transactions}
+            <MaterialTable
+              title=""
+              columns={[
+                { title: "Category", field: "categoryName" },
+                { title: "Description", field: "description" },
+                { title: "Date", field: "date" },
+                { title: "Cost", field: "cost", type: "numeric" }
+              ]}
+              data={transactions}
+              options={{
+                search: true
+              }}
             />
+            )
           </CardBody>
         </Card>
       </GridItem>
