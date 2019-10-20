@@ -91,7 +91,6 @@ export default function Metrics() {
       expense => expense.category.name === categoryName
     );
 
-    console.log("expensesForCategory - ", categoryName, expensesForCategory);
     const expensesForCategoryByMonth = {};
 
     let totalExpensesForCategory = 0;
@@ -104,8 +103,6 @@ export default function Metrics() {
         expensesForCategoryByMonth[month] += +expense.cost;
       }
     });
-
-    console.log("expensesForCategoryByMonth - ", expensesForCategoryByMonth);
 
     const months = [
       "Jan",
@@ -147,20 +144,6 @@ export default function Metrics() {
   options.drilldown = {
     series: drilldownSeriesData
   };
-
-  console.log(options);
-
-  // options.drilldown = {
-  //   series: [
-  //     {
-  //       name: "General",
-  //       id: "General",
-  //       data: [["v1.0", 10], ["v2.0", 20]]
-  //     }
-  //   ]
-  // };
-
-  console.log("Options: ", options);
 
   return (
     <div>
