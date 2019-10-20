@@ -43,6 +43,27 @@ const useStyles = makeStyles(styles);
 
 export default function TableList() {
   const classes = useStyles();
+  // const transaction = ["a", "desc", "2019-10-15T15:10:06Z", 23];
+  const transactions = [];
+  const fetchedTransactions = JSON.parse(
+    window.localStorage.getItem("transactions")
+  );
+  // console.log("window", window);
+  fetchedTransactions.map(transaction => {
+    transactions.push([
+      transaction.category.name,
+      transaction.description,
+      new Date(transaction.date).toDateString(),
+      transaction.cost
+    ]);
+    // transaction.category.name,
+    // transaction.description,
+    // new Date(transaction.date),
+    // transaction.cost
+    // );
+  });
+  console.log("fetchedTransactions", transactions);
+
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -54,14 +75,7 @@ export default function TableList() {
             <Table
               tableHeaderColor="primary"
               tableHead={["Category", "Description", "Date", "Cost"]}
-              tableData={[
-                ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-                ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
-                ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
-                ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
-                ["Doris Greene", "Malawi", "Feldkirchen in Kärnten", "$63,542"],
-                ["Mason Porter", "Chile", "Gloucester", "$78,615"]
-              ]}
+              tableData={transactions}
             />
           </CardBody>
         </Card>

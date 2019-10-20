@@ -68,6 +68,10 @@ export default function Dashboard() {
           console.log("Error:", data.error);
         } else {
           console.log("Expenses:", data);
+          window.localStorage.setItem(
+            "transactions",
+            JSON.stringify(data.expenses)
+          );
           setTransactions(data);
         }
       })
