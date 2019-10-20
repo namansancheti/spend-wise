@@ -43,7 +43,6 @@ import {
   emailsSubscriptionChart,
   completedTasksChart
 } from "variables/charts.js";
-import { data } from "../../test";
 
 drilldown(Highcharts);
 
@@ -70,10 +69,10 @@ const options = {
 
 const useStyles = makeStyles(styles);
 
-export default function Metrics() {
+export default function Metrics(props) {
   const classes = useStyles();
   const { totalCost, spendingByCategoryMap } = getSpendingByCategory(
-    data.expenses
+    props.inpData.expenses
   );
   const categoryNames = Array.from(spendingByCategoryMap.keys());
 
@@ -87,7 +86,7 @@ export default function Metrics() {
       y: (spendingByCategoryMap.get(categoryName) / totalCost) * 100
     });
 
-    const expensesForCategory = data.expenses.filter(
+    const expensesForCategory = props.inpData.expenses.filter(
       expense => expense.category.name === categoryName
     );
 

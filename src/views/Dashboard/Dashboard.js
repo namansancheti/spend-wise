@@ -57,14 +57,14 @@ export default function Dashboard() {
   };
 
   if (transactions.length === 0) {
-    fetch("https://secure.splitwise.com/api/v3.0/get_expenses")
+    fetch("https://secure.splitwise.com/api/v3.0/get_expenses?limit=0")
       .then(resp => resp.json())
       .then(data => {
         if (data.error) {
           console.log("Error:", data.error);
         } else {
           console.log("Expenses:", data);
-          setTransactions(data.expenses);
+          setTransactions(data);
         }
       })
       .catch(err => console.error(err));
@@ -100,7 +100,7 @@ export default function Dashboard() {
           ></iframe>
         </div>
       ) : (
-        <Metrics />
+        <Metrics inpData={transactions} />
       )}
     </div>
   );
